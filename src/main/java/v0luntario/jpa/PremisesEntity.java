@@ -5,64 +5,63 @@ import java.util.Arrays;
 import java.util.Collection;
 
 /**
- * Created by silvo on 3/10/17.
+ * Created by silvo on 3/15/17.
  */
-@Entity
-@Table(name = "premises", schema = "v0luntario")
+@Entity(name = "premises")
+@Table(name = "premises")
+@NamedQueries({
+        @NamedQuery(name = "premises.findAll", query = "SELECT u FROM premises u")})
 public class PremisesEntity {
-    private String premiseId;
-    private String description;
-    private byte[] attachment;
-    private byte[] attachment2;
-    private byte[] attachment3;
-    private Collection<MovementsEntity> movementssByPremiseId;
-
     @Id
-    @Column(name = "premise_id")
+    @Column(name = "premise_id", nullable = false, length = 255)
+    private String premiseId;
+    @Basic
+    @Column(name = "description", nullable = false, length = 255)
+    private String description;
+    @Basic
+    @Column(name = "attachment", nullable = true)
+    private byte[] attachment;
+    @Basic
+    @Column(name = "attachment2", nullable = true)
+    private byte[] attachment2;
+    @Basic
+    @Column(name = "attachment3", nullable = true)
+    private byte[] attachment3;
+
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "premiseId")
+    private Collection<MovementsEntity> movementCollection;
+
     public String getPremiseId() {
         return premiseId;
     }
-
     public void setPremiseId(String premiseId) {
         this.premiseId = premiseId;
     }
 
-    @Basic
-    @Column(name = "description")
     public String getDescription() {
         return description;
     }
-
     public void setDescription(String description) {
         this.description = description;
     }
 
-    @Basic
-    @Column(name = "attachment")
     public byte[] getAttachment() {
         return attachment;
     }
-
     public void setAttachment(byte[] attachment) {
         this.attachment = attachment;
     }
 
-    @Basic
-    @Column(name = "attachment2")
     public byte[] getAttachment2() {
         return attachment2;
     }
-
     public void setAttachment2(byte[] attachment2) {
         this.attachment2 = attachment2;
     }
 
-    @Basic
-    @Column(name = "attachment3")
     public byte[] getAttachment3() {
         return attachment3;
     }
-
     public void setAttachment3(byte[] attachment3) {
         this.attachment3 = attachment3;
     }
@@ -91,14 +90,5 @@ public class PremisesEntity {
         result = 31 * result + Arrays.hashCode(attachment2);
         result = 31 * result + Arrays.hashCode(attachment3);
         return result;
-    }
-
-    @OneToMany(mappedBy = "premisesByPremiseId")
-    public Collection<MovementsEntity> getMovementssByPremiseId() {
-        return movementssByPremiseId;
-    }
-
-    public void setMovementssByPremiseId(Collection<MovementsEntity> movementssByPremiseId) {
-        this.movementssByPremiseId = movementssByPremiseId;
     }
 }

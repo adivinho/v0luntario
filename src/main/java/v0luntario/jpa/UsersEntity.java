@@ -1,97 +1,147 @@
 package v0luntario.jpa;
 
+import com.sun.istack.internal.NotNull;
+
 import javax.persistence.*;
 import java.io.Serializable;
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 /**
- * Created by silvo on 3/10/17.
+ * Created by silvo on 3/14/17.
  */
-@Entity
-@Table(name = "users", schema = "v0luntario")
-public class UsersEntity {
-    private String userId;
-    private String username;
-    private Serializable role;
-    private String createdBy;
-    private String email;
-    private String passwordHash;
-    private Timestamp lastLogin;
-    private Collection<MovementsEntity> movementssByUserId;
-    private Collection<ProductsEntity> productssByUserId;
-    private Collection<StashEntity> stashesByUserId;
-    private Collection<UserGroupEntity> userGroupsByUserId;
-    private UserdetailsEntity userdetailsByUserId;
-
+@Entity(name = "users")
+@Table(name = "users")
+@NamedQueries({
+        @NamedQuery(name = "users.findAll", query = "SELECT a FROM users a"),
+        @NamedQuery(name = "users.findAllWithActivation", query = "SELECT a, d.activationDate FROM users a JOIN userdetails d where a.userId=d.userId")
+})
+public class UsersEntity implements Serializable{
+    private static final long serialVersionUID = 1L;
     @Id
+    @NotNull
     @Column(name = "user_id")
+    private String userId;
+    @Basic
+    @NotNull
+    @Column(name = "username")
+    private String username;
+    public enum Roles {
+        Root,
+        Admin,
+        User,
+        Watcher
+    };
+    @Basic
+    @NotNull
+    @Column(name = "role")
+    @Enumerated(EnumType.STRING)
+    private Roles role;
+    @Basic
+    @Column(name = "created_by")
+    private String createdBy;
+    @Basic
+    @Column(name = "email")
+    private String email;
+    @Basic
+    @NotNull
+    @Column(name = "password_hash")
+    private String passwordHash;
+    @Basic
+    @Column(name = "last_login")
+    private Timestamp lastLogin;
+
+    @OneToOne(cascade = CascadeType.ALL, mappedBy = "users")
+    private UserdetailsEntity userdetails;
+
+    @JoinTable(name = "user_group",
+            joinColumns = {
+                @JoinColumn(name = "user_id", referencedColumnName = "user_id")
+            },
+            inverseJoinColumns = {
+                @JoinColumn(name = "group_id", referencedColumnName = "group_id")
+            }
+    )
+
+    @ManyToMany(cascade = CascadeType.DETACH)
+    private List<GroupsEntity> groupsList = new ArrayList<>();
+
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "userId")
+    private Collection<MovementsEntity> movementCollection;
+
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "userId")
+    private Collection<StashEntity> stashCollection;
+
     public String getUserId() {
         return userId;
     }
-
     public void setUserId(String userId) {
         this.userId = userId;
     }
 
-    @Basic
-    @Column(name = "username")
+
     public String getUsername() {
         return username;
     }
-
     public void setUsername(String username) {
         this.username = username;
     }
 
-    @Basic
-    @Column(name = "role")
-    public Serializable getRole() {
+
+    public Roles getRole() {
         return role;
     }
-
-    public void setRole(Serializable role) {
+    public void setRole(Roles role) {
         this.role = role;
     }
 
-    @Basic
-    @Column(name = "created_by")
+
     public String getCreatedBy() {
         return createdBy;
     }
-
     public void setCreatedBy(String createdBy) {
         this.createdBy = createdBy;
     }
 
-    @Basic
-    @Column(name = "email")
+
     public String getEmail() {
         return email;
     }
-
     public void setEmail(String email) {
         this.email = email;
     }
 
-    @Basic
-    @Column(name = "password_hash")
+
     public String getPasswordHash() {
         return passwordHash;
     }
-
     public void setPasswordHash(String passwordHash) {
         this.passwordHash = passwordHash;
     }
 
-    @Basic
-    @Column(name = "last_login")
+
     public Timestamp getLastLogin() {
         return lastLogin;
     }
-
     public void setLastLogin(Timestamp lastLogin) {
         this.lastLogin = lastLogin;
+    }
+
+    public UsersEntity() {
+    }
+
+    public UsersEntity(String userId) {
+        this.userId = userId;
+    }
+
+    public UsersEntity(String userId, String username, String createdBy, String email, String passwordHash) {
+        this.userId = userId;
+        this.username = username;
+        this.createdBy = createdBy;
+        this.email = email;
+        this.passwordHash = passwordHash;
     }
 
     @Override
@@ -124,48 +174,8 @@ public class UsersEntity {
         return result;
     }
 
-    @OneToMany(mappedBy = "usersByUserId")
-    public Collection<MovementsEntity> getMovementssByUserId() {
-        return movementssByUserId;
-    }
-
-    public void setMovementssByUserId(Collection<MovementsEntity> movementssByUserId) {
-        this.movementssByUserId = movementssByUserId;
-    }
-
-    @OneToMany(mappedBy = "usersByAddedBy")
-    public Collection<ProductsEntity> getProductssByUserId() {
-        return productssByUserId;
-    }
-
-    public void setProductssByUserId(Collection<ProductsEntity> productssByUserId) {
-        this.productssByUserId = productssByUserId;
-    }
-
-    @OneToMany(mappedBy = "usersByUserId")
-    public Collection<StashEntity> getStashesByUserId() {
-        return stashesByUserId;
-    }
-
-    public void setStashesByUserId(Collection<StashEntity> stashesByUserId) {
-        this.stashesByUserId = stashesByUserId;
-    }
-
-    @OneToMany(mappedBy = "usersByUserId")
-    public Collection<UserGroupEntity> getUserGroupsByUserId() {
-        return userGroupsByUserId;
-    }
-
-    public void setUserGroupsByUserId(Collection<UserGroupEntity> userGroupsByUserId) {
-        this.userGroupsByUserId = userGroupsByUserId;
-    }
-
-    @OneToOne(mappedBy = "usersByUserId")
-    public UserdetailsEntity getUserdetailsByUserId() {
-        return userdetailsByUserId;
-    }
-
-    public void setUserdetailsByUserId(UserdetailsEntity userdetailsByUserId) {
-        this.userdetailsByUserId = userdetailsByUserId;
+    @Override
+    public String toString() {
+        return "id: " + getUserId() + ",\t usernamename: " + getUsername() + ",\t email: "+ getEmail() +",\t activation: "+userdetails.getActivationDate()+"\n";
     }
 }

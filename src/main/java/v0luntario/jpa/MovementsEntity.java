@@ -5,44 +5,51 @@ import java.math.BigDecimal;
 import java.sql.Timestamp;
 
 /**
- * Created by silvo on 3/10/17.
+ * Created by silvo on 3/15/17.
  */
-@Entity
-@Table(name = "movements", schema = "v0luntario")
+@Entity(name = "movements")
+@Table(name = "movements")
 public class MovementsEntity {
-    private String moveId;
-    private BigDecimal amount;
-    private Timestamp motionDate;
-    private ProductsEntity productsByProdId;
-    private UsersEntity usersByUserId;
-    private PremisesEntity premisesByPremiseId;
-
     @Id
-    @Column(name = "move_id")
+    @Column(name = "move_id", nullable = false, length = 255)
+    private String moveId;
+
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "prod_id", referencedColumnName = "prod_id")
+    private ProductsEntity prodId;
+
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "user_id", referencedColumnName = "user_id")
+    private UsersEntity userId;
+
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "premise_id", referencedColumnName = "premise_id")
+    private PremisesEntity premiseId;
+
+    @Basic
+    @Column(name = "amount", nullable = true, precision = 2)
+    private BigDecimal amount;
+    @Basic
+    @Column(name = "motion_date", nullable = true)
+    private Timestamp motionDate;
+
     public String getMoveId() {
         return moveId;
     }
-
     public void setMoveId(String moveId) {
         this.moveId = moveId;
     }
 
-    @Basic
-    @Column(name = "amount")
     public BigDecimal getAmount() {
         return amount;
     }
-
     public void setAmount(BigDecimal amount) {
         this.amount = amount;
     }
 
-    @Basic
-    @Column(name = "motion_date")
     public Timestamp getMotionDate() {
         return motionDate;
     }
-
     public void setMotionDate(Timestamp motionDate) {
         this.motionDate = motionDate;
     }
@@ -67,35 +74,5 @@ public class MovementsEntity {
         result = 31 * result + (amount != null ? amount.hashCode() : 0);
         result = 31 * result + (motionDate != null ? motionDate.hashCode() : 0);
         return result;
-    }
-
-    @ManyToOne
-    @JoinColumn(name = "prod_id", referencedColumnName = "prod_id", nullable = false)
-    public ProductsEntity getProductsByProdId() {
-        return productsByProdId;
-    }
-
-    public void setProductsByProdId(ProductsEntity productsByProdId) {
-        this.productsByProdId = productsByProdId;
-    }
-
-    @ManyToOne
-    @JoinColumn(name = "user_id", referencedColumnName = "user_id", nullable = false)
-    public UsersEntity getUsersByUserId() {
-        return usersByUserId;
-    }
-
-    public void setUsersByUserId(UsersEntity usersByUserId) {
-        this.usersByUserId = usersByUserId;
-    }
-
-    @ManyToOne
-    @JoinColumn(name = "premise_id", referencedColumnName = "premise_id", nullable = false)
-    public PremisesEntity getPremisesByPremiseId() {
-        return premisesByPremiseId;
-    }
-
-    public void setPremisesByPremiseId(PremisesEntity premisesByPremiseId) {
-        this.premisesByPremiseId = premisesByPremiseId;
     }
 }

@@ -1,49 +1,76 @@
 package v0luntario.jpa;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.Collection;
 
 /**
- * Created by silvo on 3/10/17.
+ * Created by silvo on 3/15/17.
  */
-@Entity
-@Table(name = "products", schema = "v0luntario")
-public class ProductsEntity {
-    private String prodId;
-    private String name;
-    private String description;
-    private Collection<MovementsEntity> movementssByProdId;
-    private ClassesEntity classesByClassId;
-    private UnitsEntity unitsByUnitId;
-    private UsersEntity usersByAddedBy;
-    private Collection<StashEntity> stashesByProdId;
-
+@Entity(name = "products")
+@Table(name = "products")
+@NamedQueries({
+        @NamedQuery(name = "products.findAll", query = "SELECT a FROM products a")
+})
+public class ProductsEntity implements Serializable {
     @Id
-    @Column(name = "prod_id")
+    @Column(name = "prod_id", nullable = false, length = 255)
+    private String prodId;
+    @Basic
+    @Column(name = "name", nullable = false, length = 120)
+    private String name;
+    @Basic
+    @Column(name = "description", nullable = true, length = 255)
+    private String description;
+
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "unit_id", referencedColumnName = "unit_id")
+    private UnitsEntity unitId;
+
+    public UnitsEntity getUnitId() {
+        return unitId;
+    }
+
+    public void setUnitId(UnitsEntity unitId) {
+        this.unitId = unitId;
+    }
+
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "class_id", referencedColumnName = "class_id")
+    private ClassesEntity classId;
+
+    public ClassesEntity getClassId() {
+        return classId;
+    }
+
+    public void setClassId(ClassesEntity classId) {
+        this.classId = classId;
+    }
+
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "prodId")
+    private Collection<MovementsEntity> movementCollection;
+
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "prodId")
+    private Collection<StashEntity> stashCollection;
+
     public String getProdId() {
         return prodId;
     }
-
     public void setProdId(String prodId) {
         this.prodId = prodId;
     }
 
-    @Basic
-    @Column(name = "name")
     public String getName() {
         return name;
     }
-
     public void setName(String name) {
         this.name = name;
     }
 
-    @Basic
-    @Column(name = "description")
+
     public String getDescription() {
         return description;
     }
-
     public void setDescription(String description) {
         this.description = description;
     }
@@ -70,51 +97,8 @@ public class ProductsEntity {
         return result;
     }
 
-    @OneToMany(mappedBy = "productsByProdId")
-    public Collection<MovementsEntity> getMovementssByProdId() {
-        return movementssByProdId;
-    }
-
-    public void setMovementssByProdId(Collection<MovementsEntity> movementssByProdId) {
-        this.movementssByProdId = movementssByProdId;
-    }
-
-    @ManyToOne
-    @JoinColumn(name = "class_id", referencedColumnName = "class_id", nullable = false)
-    public ClassesEntity getClassesByClassId() {
-        return classesByClassId;
-    }
-
-    public void setClassesByClassId(ClassesEntity classesByClassId) {
-        this.classesByClassId = classesByClassId;
-    }
-
-    @ManyToOne
-    @JoinColumn(name = "unit_id", referencedColumnName = "unit_id", nullable = false)
-    public UnitsEntity getUnitsByUnitId() {
-        return unitsByUnitId;
-    }
-
-    public void setUnitsByUnitId(UnitsEntity unitsByUnitId) {
-        this.unitsByUnitId = unitsByUnitId;
-    }
-
-    @ManyToOne
-    @JoinColumn(name = "added_by", referencedColumnName = "user_id", nullable = false)
-    public UsersEntity getUsersByAddedBy() {
-        return usersByAddedBy;
-    }
-
-    public void setUsersByAddedBy(UsersEntity usersByAddedBy) {
-        this.usersByAddedBy = usersByAddedBy;
-    }
-
-    @OneToMany(mappedBy = "productsByProdId")
-    public Collection<StashEntity> getStashesByProdId() {
-        return stashesByProdId;
-    }
-
-    public void setStashesByProdId(Collection<StashEntity> stashesByProdId) {
-        this.stashesByProdId = stashesByProdId;
+    @Override
+    public String toString() {
+        return "id: " + getProdId() + ",\t name: " + getName() + ",\t description: "+ getDescription()+"\n";
     }
 }

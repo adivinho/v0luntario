@@ -1,45 +1,49 @@
 package v0luntario.jpa;
 
 import javax.persistence.*;
-import java.util.Collection;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
- * Created by silvo on 3/10/17.
+ * Created by silvo on 3/14/17.
  */
-@Entity
-@Table(name = "groups", schema = "v0luntario")
+@Entity(name = "groups")
+@Table(name = "groups")
+@NamedQueries({
+        @NamedQuery(name = "groups.findAll", query = "SELECT u FROM groups u")})
 public class GroupsEntity {
-    private String groupId;
-    private String groupName;
-    private String description;
-    private Collection<UserGroupEntity> userGroupsByGroupId;
-
     @Id
     @Column(name = "group_id")
+    private String groupId;
+    @Basic
+    @Column(name = "group_name")
+    private String groupName;
+    @Basic
+    @Column(name = "description")
+    private String description;
+    @ManyToMany(mappedBy = "groupsList", cascade = CascadeType.DETACH)
+    private List<UsersEntity> usersList = new ArrayList<>();
+
+
     public String getGroupId() {
         return groupId;
     }
-
     public void setGroupId(String groupId) {
         this.groupId = groupId;
     }
 
-    @Basic
-    @Column(name = "group_name")
+
     public String getGroupName() {
         return groupName;
     }
-
     public void setGroupName(String groupName) {
         this.groupName = groupName;
     }
 
-    @Basic
-    @Column(name = "description")
+
     public String getDescription() {
         return description;
     }
-
     public void setDescription(String description) {
         this.description = description;
     }
@@ -66,12 +70,9 @@ public class GroupsEntity {
         return result;
     }
 
-    @OneToMany(mappedBy = "groupsByGroupId")
-    public Collection<UserGroupEntity> getUserGroupsByGroupId() {
-        return userGroupsByGroupId;
-    }
-
-    public void setUserGroupsByGroupId(Collection<UserGroupEntity> userGroupsByGroupId) {
-        this.userGroupsByGroupId = userGroupsByGroupId;
+    @Override
+    public String toString() {
+        return "group id: " + getGroupId() + ",\t group name: " + getGroupName() + "\t Members: "+usersList.size()+"\n";
     }
 }
+

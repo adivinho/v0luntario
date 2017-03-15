@@ -1,45 +1,47 @@
 package v0luntario.jpa;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.Collection;
 
 /**
- * Created by silvo on 3/10/17.
+ * Created by silvo on 3/15/17.
  */
-@Entity
-@Table(name = "classes", schema = "v0luntario")
-public class ClassesEntity {
-    private String classId;
-    private String name;
-    private String description;
-    private Collection<ProductsEntity> productssByClassId;
-
+@Entity(name = "classes")
+@Table(name = "classes")
+@NamedQueries({
+        @NamedQuery(name = "classes.findAll", query = "SELECT u FROM classes u")})
+public class ClassesEntity implements Serializable {
     @Id
-    @Column(name = "class_id")
+    @Column(name = "class_id", nullable = false, length = 255)
+    private String classId;
+    @Basic
+    @Column(name = "name", nullable = false, length = 120)
+    private String name;
+    @Basic
+    @Column(name = "description", nullable = true, length = 255)
+    private String description;
+
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "classId")
+    private Collection<ProductsEntity> productsCollection;
+
     public String getClassId() {
         return classId;
     }
-
     public void setClassId(String classId) {
         this.classId = classId;
     }
 
-    @Basic
-    @Column(name = "name")
     public String getName() {
         return name;
     }
-
     public void setName(String name) {
         this.name = name;
     }
 
-    @Basic
-    @Column(name = "description")
     public String getDescription() {
         return description;
     }
-
     public void setDescription(String description) {
         this.description = description;
     }
@@ -66,12 +68,8 @@ public class ClassesEntity {
         return result;
     }
 
-    @OneToMany(mappedBy = "classesByClassId")
-    public Collection<ProductsEntity> getProductssByClassId() {
-        return productssByClassId;
-    }
-
-    public void setProductssByClassId(Collection<ProductsEntity> productssByClassId) {
-        this.productssByClassId = productssByClassId;
+    @Override
+    public String toString() {
+        return "class id: " + getClassId() + ",\t class name: " + getName() + "\t Members: "+productsCollection.size()+"\n";
     }
 }

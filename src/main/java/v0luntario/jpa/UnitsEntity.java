@@ -1,37 +1,42 @@
 package v0luntario.jpa;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.Collection;
 
 /**
- * Created by silvo on 3/10/17.
+ * Created by silvo on 3/15/17.
  */
-@Entity
-@Table(name = "units", schema = "v0luntario")
-public class UnitsEntity {
-    private String unitId;
-    private String name;
-    private Collection<ProductsEntity> productssByUnitId;
-
+@Entity(name = "units")
+@Table(name = "units")
+@NamedQueries({
+        @NamedQuery(name = "units.findAll", query = "SELECT u FROM units u")})
+public class UnitsEntity implements Serializable {
     @Id
-    @Column(name = "unit_id")
+    @Column(name = "unit_id", nullable = false, length = 255)
+    private String unitId;
+    @Basic
+    @Column(name = "name", nullable = false, length = 20)
+    private String name;
+
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "unitId")
+    private Collection<ProductsEntity> productsCollection;
+
     public String getUnitId() {
         return unitId;
     }
-
     public void setUnitId(String unitId) {
         this.unitId = unitId;
     }
 
-    @Basic
-    @Column(name = "name")
+
     public String getName() {
         return name;
     }
-
     public void setName(String name) {
         this.name = name;
     }
+
 
     @Override
     public boolean equals(Object o) {
@@ -53,12 +58,8 @@ public class UnitsEntity {
         return result;
     }
 
-    @OneToMany(mappedBy = "unitsByUnitId")
-    public Collection<ProductsEntity> getProductssByUnitId() {
-        return productssByUnitId;
-    }
-
-    public void setProductssByUnitId(Collection<ProductsEntity> productssByUnitId) {
-        this.productssByUnitId = productssByUnitId;
+    @Override
+    public String toString() {
+        return "unit id: " + getUnitId() + ",\t unit name: " + getName() + "\t Members: "+productsCollection.size()+"\n";
     }
 }

@@ -6,77 +6,79 @@ import java.math.BigDecimal;
 import java.sql.Timestamp;
 
 /**
- * Created by silvo on 3/10/17.
+ * Created by silvo on 3/15/17.
  */
-@Entity
-@Table(name = "stash", schema = "v0luntario")
-@IdClass(StashEntityPK.class)
+@Entity(name = "stash")
+@Table(name = "stash")
+@NamedQueries({
+        @NamedQuery(name = "stash.findAll", query = "SELECT a FROM stash a")
+})
 public class StashEntity {
-    private String prodId;
-    private String userId;
-    private BigDecimal amount;
-    private BigDecimal requiredAmount;
-    private Serializable active;
-    private Timestamp deadline;
-    private ProductsEntity productsByProdId;
-    private UsersEntity usersByUserId;
-
     @Id
-    @Column(name = "prod_id")
-    public String getProdId() {
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "prod_id", referencedColumnName = "prod_id")
+    private ProductsEntity prodId;
+    @Id
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "user_id", referencedColumnName = "user_id")
+    private UsersEntity userId;
+    @Basic
+    @Column(name = "amount", nullable = true, precision = 2)
+    private BigDecimal amount;
+    @Basic
+    @Column(name = "required_amount", nullable = true, precision = 2)
+    private BigDecimal requiredAmount;
+    public enum Status {
+        Active,
+        Suspended,
+        Closed
+    };
+    @Basic
+    @Column(name = "status", nullable = true)
+    @Enumerated(EnumType.STRING)
+    private Status status;
+    @Basic
+    @Column(name = "deadline", nullable = true)
+    private Timestamp deadline;
+
+    public ProductsEntity getProdId() {
         return prodId;
     }
-
-    public void setProdId(String prodId) {
+    public void setProdId(ProductsEntity prodId) {
         this.prodId = prodId;
     }
 
-    @Id
-    @Column(name = "user_id")
-    public String getUserId() {
+    public UsersEntity getUserId() {
         return userId;
     }
-
-    public void setUserId(String userId) {
+    public void setUserId(UsersEntity userId) {
         this.userId = userId;
     }
 
-    @Basic
-    @Column(name = "amount")
     public BigDecimal getAmount() {
         return amount;
     }
-
     public void setAmount(BigDecimal amount) {
         this.amount = amount;
     }
 
-    @Basic
-    @Column(name = "required_amount")
     public BigDecimal getRequiredAmount() {
         return requiredAmount;
     }
-
     public void setRequiredAmount(BigDecimal requiredAmount) {
         this.requiredAmount = requiredAmount;
     }
 
-    @Basic
-    @Column(name = "active")
-    public Serializable getActive() {
-        return active;
+    public Status getStatus() {
+        return status;
+    }
+    public void setStatus(Status status) {
+        this.status = status;
     }
 
-    public void setActive(Serializable active) {
-        this.active = active;
-    }
-
-    @Basic
-    @Column(name = "deadline")
     public Timestamp getDeadline() {
         return deadline;
     }
-
     public void setDeadline(Timestamp deadline) {
         this.deadline = deadline;
     }
@@ -93,7 +95,7 @@ public class StashEntity {
         if (amount != null ? !amount.equals(that.amount) : that.amount != null) return false;
         if (requiredAmount != null ? !requiredAmount.equals(that.requiredAmount) : that.requiredAmount != null)
             return false;
-        if (active != null ? !active.equals(that.active) : that.active != null) return false;
+        if (status != null ? !status.equals(that.status) : that.status != null) return false;
         if (deadline != null ? !deadline.equals(that.deadline) : that.deadline != null) return false;
 
         return true;
@@ -105,28 +107,13 @@ public class StashEntity {
         result = 31 * result + (userId != null ? userId.hashCode() : 0);
         result = 31 * result + (amount != null ? amount.hashCode() : 0);
         result = 31 * result + (requiredAmount != null ? requiredAmount.hashCode() : 0);
-        result = 31 * result + (active != null ? active.hashCode() : 0);
+        result = 31 * result + (status != null ? status.hashCode() : 0);
         result = 31 * result + (deadline != null ? deadline.hashCode() : 0);
         return result;
     }
 
-    @ManyToOne
-    @JoinColumn(name = "prod_id", referencedColumnName = "prod_id", nullable = false)
-    public ProductsEntity getProductsByProdId() {
-        return productsByProdId;
-    }
-
-    public void setProductsByProdId(ProductsEntity productsByProdId) {
-        this.productsByProdId = productsByProdId;
-    }
-
-    @ManyToOne
-    @JoinColumn(name = "user_id", referencedColumnName = "user_id", nullable = false)
-    public UsersEntity getUsersByUserId() {
-        return usersByUserId;
-    }
-
-    public void setUsersByUserId(UsersEntity usersByUserId) {
-        this.usersByUserId = usersByUserId;
+    @Override
+    public String toString() {
+        return "prod_id: " + getProdId() + ",\t user_id: " + getUserId() + ",\t status: "+ getStatus()+"\t amount: " + getAmount() +"\n";
     }
 }

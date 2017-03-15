@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<persistence xmlns="http://java.sun.com/xml/ns/persistence" version="2.0">
+    <persistence-unit name="NewPersistenceUnit" transaction-type="RESOURCE_LOCAL">
+        <provider>org.eclipse.persistence.jpa.PersistenceProvider</provider>
+        <class>v0luntario.jpa.ClassesEntity</class>
+        <class>v0luntario.jpa.GroupsEntity</class>
+        <class>v0luntario.jpa.MovementsEntity</class>
+        <class>v0luntario.jpa.PremisesEntity</class>
+        <class>v0luntario.jpa.ProductsEntity</class>
+        <class>v0luntario.jpa.StashEntity</class>
+        <class>v0luntario.jpa.UnitsEntity</class>
+        <class>v0luntario.jpa.UserdetailsEntity</class>
+        <class>v0luntario.jpa.UsersEntity</class>
+        <properties>
+            <property name="javax.persistence.jdbc.url" value="jdbc:mysql://localhost:3306/v0luntario"/>
+            <property name="javax.persistence.jdbc.driver" value="com.mysql.cj.jdbc.Driver"/>
+            <property name="javax.persistence.jdbc.user" value="v0luntario"/>
+            <property name="javax.persistence.jdbc.password" value="qwerty"/>
+            <property name="eclipselink.logging.level" value="OFF"/>
+        </properties>
+    </persistence-unit>
+</persistence>
