@@ -20,7 +20,7 @@ INSERT INTO  userdetails (user_id, city, address, phone, first_name, mid_init, l
 INSERT INTO  userdetails (user_id, city, address, phone, first_name, mid_init, last_name, sex, notes, activation_date)
   VALUES('3001','Kiev', 'Powerman str. 10/2', '380503452121', 'Petro', 'Abromov', 'Doubleglass', 'male', 'second user', '2017-01-01 11:00:00');
 INSERT INTO  userdetails (user_id, city, address, phone, first_name, mid_init, last_name, sex, notes, activation_date)
-  VALUES('3002','Kiev', 'King str. 1/32', '380504234321', 'Ivan', 'Mihailovich', 'Halfglass', 'male', 'thrid user', '2017-01-01 12:00:00');
+  VALUES('3002','Kiev', 'King str. 1/32', '380504234321', 'Ivan', 'Mihailovich', 'Halfglass', 'male', 'third user', '2017-01-01 12:00:00');
 INSERT INTO  userdetails (user_id, city, address, phone, first_name, mid_init, last_name, sex, notes, activation_date)
   VALUES('3003','Kiev', 'Queen str. 12/39', '380994234321', 'Zinaida', 'Petrovna', 'Kuhelbeker', 'female', 'fourth user', '2017-03-11 19:00:00');
 

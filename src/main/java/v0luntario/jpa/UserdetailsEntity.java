@@ -60,6 +60,13 @@ public class UserdetailsEntity implements Serializable {
     @OneToOne(optional = false)
     private UsersEntity users;
 
+    public UserdetailsEntity() {
+    }
+
+    public UserdetailsEntity(String userId) {
+        setUserId(userId);
+    }
+
     public String getUserId() {
         return userId;
     }

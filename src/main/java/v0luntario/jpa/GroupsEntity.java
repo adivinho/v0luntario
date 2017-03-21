@@ -24,6 +24,12 @@ public class GroupsEntity {
     @ManyToMany(mappedBy = "groupsList", cascade = CascadeType.DETACH)
     private List<UsersEntity> usersList = new ArrayList<>();
 
+    public GroupsEntity() {
+    }
+
+    public GroupsEntity(String groupId) {
+        this.groupId = groupId;
+    }
 
     public String getGroupId() {
         return groupId;
