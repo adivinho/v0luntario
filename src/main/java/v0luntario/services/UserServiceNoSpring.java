@@ -1,6 +1,5 @@
 package v0luntario.services;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import v0luntario.jpa.UserdetailsEntity;
 import v0luntario.jpa.UsersEntity;
@@ -12,18 +11,17 @@ import java.util.Calendar;
 import java.util.List;
 
 /**
- * Created by silvo on 3/20/17.
+ * Created by silvo on 3/26/17.
  */
-@Service
-public class UsersService {
-    @Autowired
+
+public class UserServiceNoSpring {
     UserRepository userRepository;
 
     EntityManagerFactory factory = Persistence.createEntityManagerFactory("NewPersistenceUnit");
     EntityManager manager = factory.createEntityManager();
     EntityTransaction userTransaction = manager.getTransaction();
 
-    public List<UsersEntity> getAllUsers() throws NoResultException{
+    public List<UsersEntity> getAllUsers() throws NoResultException {
         Query query = manager.createQuery("Select c from users c");
         try {
             List<UsersEntity> result = query.getResultList();
@@ -35,29 +33,29 @@ public class UsersService {
 //        return query.getResultList();
     };
 
-    public UsersEntity getUserById(String id) throws NoResultException{
+public UsersEntity getUserById(String id) throws NoResultException{
         Query query = manager.createQuery("Select c from users c where c.userId=:userId");
         query.setParameter("userId", id);
         try {
-            return (UsersEntity) query.getSingleResult();
+        return (UsersEntity) query.getSingleResult();
         }
         catch (NoResultException e){
-            return null;
+        return null;
         }
-    };
+        };
 
-    public UsersEntity getUserByUsername(String username) throws NoResultException{
+public UsersEntity getUserByUsername(String username) throws NoResultException{
         Query query = manager.createQuery("Select c from users c where c.username=:username");
         query.setParameter("username", username);
         try {
-            return (UsersEntity) query.getSingleResult();
+        return (UsersEntity) query.getSingleResult();
         }
         catch (NoResultException e){
-            return null;
+        return null;
         }
-    };
+        };
 
-    public void add_user(UsersEntity ue){
+public void add_user(UsersEntity ue){
         userTransaction.begin();
         long offset = Timestamp.valueOf("2016-01-01 00:00:00").getTime();
         long end = Timestamp.valueOf("2017-03-17 00:00:00").getTime();
@@ -67,18 +65,18 @@ public class UsersService {
         manager.persist(ue);
         userTransaction.commit();
         //manager.close();
-    }
+        }
 
-    public void del_user(UsersEntity ue, UserdetailsEntity ud){
+public void del_user(UsersEntity ue, UserdetailsEntity ud){
         userTransaction.begin();
         manager.remove(ud);
         userTransaction.commit();
         userTransaction.begin();
         manager.remove(ue);
         userTransaction.commit();
-    }
+        }
 
-    public void add_userdetails(UserdetailsEntity ude){
+public void add_userdetails(UserdetailsEntity ude){
         userTransaction.begin();
         Calendar calendar = Calendar.getInstance();
         Timestamp dateNow = new java.sql.Timestamp(calendar.getTime().getTime());
@@ -86,9 +84,9 @@ public class UsersService {
         manager.persist(ude);
         userTransaction.commit();
         //manager.close();
-    }
+        }
 
-    public void edit_user(UsersEntity ue, UserdetailsEntity ud){
+public void edit_user(UsersEntity ue, UserdetailsEntity ud){
         userTransaction.begin();
         manager.merge(ue);
         manager.flush();
@@ -97,6 +95,7 @@ public class UsersService {
         manager.merge(ud);
         manager.flush();
         userTransaction.commit();
-    }
+        }
 
 }
+

@@ -6,9 +6,9 @@ import v0luntario.jpa.UsersEntity;
 import java.util.List;
 
 /**
- * Created by silvo on 3/16/17.
+ * Created by silvo on 3/24/17.
  */
-public interface UserRepository extends CrudRepository<UsersEntity, Long> {
-        @Override
-        public List<UsersEntity> findAll();
+public interface UserRepository extends CrudRepository<UsersEntity, String> {
+    @Override
+    public List<UsersEntity> findAll();
 }

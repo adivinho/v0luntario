@@ -50,7 +50,7 @@ public class ProductsEntity implements Serializable {
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "prodId")
     private Collection<MovementsEntity> movementCollection;
 
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "prodId")
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "stashId.prodId")
     private Collection<StashEntity> stashCollection;
 
     public String getProdId() {
@@ -100,5 +100,6 @@ public class ProductsEntity implements Serializable {
     @Override
     public String toString() {
         return "id: " + getProdId() + ",\t name: " + getName() + ",\t description: "+ getDescription()+"\n";
+//        return "22";
     }
 }

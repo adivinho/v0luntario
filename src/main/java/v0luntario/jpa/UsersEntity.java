@@ -1,9 +1,12 @@
 package v0luntario.jpa;
 
 import com.sun.istack.internal.NotNull;
+import v0luntario.utils.EntityIdGenerator;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.io.UnsupportedEncodingException;
+import java.security.NoSuchAlgorithmException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -16,7 +19,7 @@ import java.util.List;
 @Table(name = "users")
 @NamedQueries({
         @NamedQuery(name = "users.findAll", query = "SELECT a FROM users a"),
-        @NamedQuery(name = "users.findAllWithActivation", query = "SELECT a, d.activationDate FROM users a JOIN userdetails d where a.userId=d.userId")
+        @NamedQuery(name = "users.getUserById", query = "SELECT a FROM users a")
 })
 public class UsersEntity implements Serializable{
     private static final long serialVersionUID = 1L;
@@ -56,12 +59,20 @@ public class UsersEntity implements Serializable{
     @OneToOne(cascade = CascadeType.ALL, mappedBy = "users")
     private UserdetailsEntity userdetails;
 
+    public void setUserdetails(UserdetailsEntity userdetails) {
+        this.userdetails = userdetails;
+    }
+
+    public UserdetailsEntity getUserdetails() {
+        return userdetails;
+    }
+
     @JoinTable(name = "user_group",
             joinColumns = {
-                @JoinColumn(name = "user_id", referencedColumnName = "user_id")
+                    @JoinColumn(name = "user_id", referencedColumnName = "user_id")
             },
             inverseJoinColumns = {
-                @JoinColumn(name = "group_id", referencedColumnName = "group_id")
+                    @JoinColumn(name = "group_id", referencedColumnName = "group_id")
             }
     )
 
@@ -71,8 +82,9 @@ public class UsersEntity implements Serializable{
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "userId")
     private Collection<MovementsEntity> movementCollection;
 
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "userId")
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "stashId.userId")
     private Collection<StashEntity> stashCollection;
+
 
     public String getUserId() {
         return userId;
@@ -117,8 +129,8 @@ public class UsersEntity implements Serializable{
     public String getPasswordHash() {
         return passwordHash;
     }
-    public void setPasswordHash(String passwordHash) {
-        this.passwordHash = passwordHash;
+    public void setPasswordHash(String passwordHash) throws UnsupportedEncodingException, NoSuchAlgorithmException {
+        this.passwordHash = EntityIdGenerator.makeSHA1Hash(passwordHash);
     }
 
 
@@ -142,6 +154,13 @@ public class UsersEntity implements Serializable{
         this.createdBy = createdBy;
         this.email = email;
         this.passwordHash = passwordHash;
+    }
+
+    public List<GroupsEntity> getGroupsList() {
+        return groupsList;
+    }
+    public void setGroupsList(List<GroupsEntity> groupsList) {
+        this.groupsList = groupsList;
     }
 
     @Override

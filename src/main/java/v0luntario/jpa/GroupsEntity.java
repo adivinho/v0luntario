@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by silvo on 3/14/17.
+ * Created by silvo on 3/24/17.
  */
 @Entity(name = "groups")
 @Table(name = "groups")
@@ -24,9 +24,7 @@ public class GroupsEntity {
     @ManyToMany(mappedBy = "groupsList", cascade = CascadeType.DETACH)
     private List<UsersEntity> usersList = new ArrayList<>();
 
-    public GroupsEntity() {
-    }
-
+    public GroupsEntity() {}
     public GroupsEntity(String groupId) {
         this.groupId = groupId;
     }
@@ -81,4 +79,3 @@ public class GroupsEntity {
         return "group id: " + getGroupId() + ",\t group name: " + getGroupName() + "\t Members: "+usersList.size()+"\n";
     }
 }
-

@@ -1,5 +1,7 @@
 package v0luntario.jpa;
 
+import com.sun.istack.internal.NotNull;
+
 import javax.persistence.*;
 import java.io.Serializable;
 import java.math.BigDecimal;
@@ -14,14 +16,9 @@ import java.sql.Timestamp;
         @NamedQuery(name = "stash.findAll", query = "SELECT a FROM stash a")
 })
 public class StashEntity {
-    @Id
-    @ManyToOne(optional = false)
-    @JoinColumn(name = "prod_id", referencedColumnName = "prod_id")
-    private ProductsEntity prodId;
-    @Id
-    @ManyToOne(optional = false)
-    @JoinColumn(name = "user_id", referencedColumnName = "user_id")
-    private UsersEntity userId;
+
+    @EmbeddedId StashId stashId;
+
     @Basic
     @Column(name = "amount", nullable = true, precision = 2)
     private BigDecimal amount;
@@ -34,7 +31,8 @@ public class StashEntity {
         Closed
     };
     @Basic
-    @Column(name = "status", nullable = true)
+    @NotNull
+    @Column(name = "status")
     @Enumerated(EnumType.STRING)
     private Status status;
     @Basic
@@ -42,17 +40,17 @@ public class StashEntity {
     private Timestamp deadline;
 
     public ProductsEntity getProdId() {
-        return prodId;
+        return stashId.prodId;
     }
     public void setProdId(ProductsEntity prodId) {
-        this.prodId = prodId;
+        this.stashId.prodId = prodId;
     }
 
     public UsersEntity getUserId() {
-        return userId;
+        return stashId.userId;
     }
     public void setUserId(UsersEntity userId) {
-        this.userId = userId;
+        this.stashId.userId = userId;
     }
 
     public BigDecimal getAmount() {
@@ -90,8 +88,8 @@ public class StashEntity {
 
         StashEntity that = (StashEntity) o;
 
-        if (prodId != null ? !prodId.equals(that.prodId) : that.prodId != null) return false;
-        if (userId != null ? !userId.equals(that.userId) : that.userId != null) return false;
+        if (stashId.prodId != null ? !stashId.prodId.equals(that.stashId.prodId) : that.stashId.prodId != null) return false;
+        if (stashId.userId != null ? !stashId.userId.equals(that.stashId.userId) : that.stashId.userId != null) return false;
         if (amount != null ? !amount.equals(that.amount) : that.amount != null) return false;
         if (requiredAmount != null ? !requiredAmount.equals(that.requiredAmount) : that.requiredAmount != null)
             return false;
@@ -103,8 +101,8 @@ public class StashEntity {
 
     @Override
     public int hashCode() {
-        int result = prodId != null ? prodId.hashCode() : 0;
-        result = 31 * result + (userId != null ? userId.hashCode() : 0);
+        int result = stashId.prodId != null ? stashId.prodId.hashCode() : 0;
+        result = 31 * result + (stashId.userId != null ? stashId.userId.hashCode() : 0);
         result = 31 * result + (amount != null ? amount.hashCode() : 0);
         result = 31 * result + (requiredAmount != null ? requiredAmount.hashCode() : 0);
         result = 31 * result + (status != null ? status.hashCode() : 0);
@@ -114,6 +112,20 @@ public class StashEntity {
 
     @Override
     public String toString() {
-        return "prod_id: " + getProdId() + ",\t user_id: " + getUserId() + ",\t status: "+ getStatus()+"\t amount: " + getAmount() +"\n";
+//        return "prod_id: " + getProdId() + ",\t user_id: " + getUserId() + ",\t status: "+ getStatus()+"\t amount: " + getAmount() +"\n";
+        return "12";
     }
+
+};
+
+@Embeddable
+class StashId implements Serializable {
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "prod_id", referencedColumnName = "prod_id")
+    public ProductsEntity prodId;
+//    public String prodId;
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "user_id", referencedColumnName = "user_id")
+    public UsersEntity userId;
+//    public String userId;
 }
