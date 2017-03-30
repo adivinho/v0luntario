@@ -21,6 +21,14 @@ public class GroupsEntity {
     @Basic
     @Column(name = "description")
     private String description;
+
+    public List<UsersEntity> getUsersList() {
+        return usersList;
+    }
+    public void setUsersList(List<UsersEntity> usersList) {
+        this.usersList = usersList;
+    }
+
     @ManyToMany(mappedBy = "groupsList", cascade = CascadeType.DETACH)
     private List<UsersEntity> usersList = new ArrayList<>();
 

@@ -1,5 +1,7 @@
 package v0luntario.api;
 
+import v0luntario.jpa.GroupsEntity;
+
 import javax.xml.bind.annotation.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -21,6 +23,6 @@ public class UserReply {
     public String email;
     @XmlElement(required = true)
     public String role;
-    @XmlElement(required = true, name="groups")
-    public List<String> groups = new ArrayList<String>();
+    @XmlElement(name="groups")
+    public List<String> groups = new ArrayList<>();
 }

@@ -13,6 +13,8 @@ import v0luntario.jpa.UsersEntity;
 import v0luntario.services.UserMapper;
 import v0luntario.services.UserService;
 
+import java.io.EOFException;
+
 /**
  * Created by silvo on 3/24/17.
  */
@@ -58,20 +60,18 @@ public class UsersController {
         return rep;
     }
 
-    @RequestMapping(path="/users/add",  method= {RequestMethod.GET, RequestMethod.POST}, produces = MediaType.APPLICATION_JSON_UTF8_VALUE, consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
-//    public UserListReply addUser(@RequestBody AddUserRequest req){
-        public UserListReply addUser(){
+    @RequestMapping(path="/users/add",  method= {RequestMethod.POST}, produces = MediaType.APPLICATION_JSON_UTF8_VALUE, consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public UserListReply addUser(@RequestBody AddUserRequest req) throws EOFException {
             logger.info("=> /users/add request has come");
             UserListReply rep = new UserListReply();
             try{
-                UsersEntity au;
-//              au = userService.addUser(userMapper.toInternal(req.user));
-//              rep.users.add(userMapper.fromInternal(au));
+                UsersEntity ue = userService.addUser(userMapper.toInternal(req.user));
+                rep.users.add(userMapper.fromInternal(ue));
             }
             catch(Exception e){
                 rep.retcode = -1;
                 rep.error_message = e.getMessage();
-                logger.error("Error adding an user. Exception: "+e.getMessage(),e);
+                logger.error("=> Error adding an user. Exception: "+e.getMessage());
             }
             return rep;
     }

@@ -74,7 +74,7 @@ public class UserMapper {
             }
             if (i > 0){
                 for (GroupsEntity ge : u.getGroupsList()){
-                    lu.groups.add(ge.getGroupName());
+                    lu.groups.add(ge.getGroupId());
                 }
             }
         }
@@ -84,14 +84,15 @@ public class UserMapper {
     public UsersEntity toInternal(UserReply lu) throws UnsupportedEncodingException, NoSuchAlgorithmException {
         UsersEntity au = null;
         //first, check if it exists
-        if (lu.user_id != null) {
+        if (lu != null) {
+            logger.info("=> Provided %s user_id ",lu.user_id);
             au = userRepository.findOne(lu.user_id);
         }
         if (au == null) { //not found, create new
-            logger.debug("Creating new user ...");
+            logger.debug("=> Creating new user ...");
             au = newUser();
         }
-        logger.debug("Updating existing user ...");
+        logger.debug("=> Updating existing user ...");
         au.setUsername(lu.login);
         au.getUserdetails().setFirstName(lu.firstName);
         au.getUserdetails().setLastName(lu.lastName);
