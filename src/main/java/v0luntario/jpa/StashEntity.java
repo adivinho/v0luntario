@@ -15,7 +15,7 @@ import java.sql.Timestamp;
 @NamedQueries({
         @NamedQuery(name = "stash.findAll", query = "SELECT a FROM stash a")
 })
-public class StashEntity {
+public class StashEntity implements Serializable{
 
     @EmbeddedId StashId stashId;
 
@@ -38,6 +38,14 @@ public class StashEntity {
     @Basic
     @Column(name = "deadline", nullable = true)
     private Timestamp deadline;
+
+    public StashId getStashId() {
+        return stashId;
+    }
+
+    public void setStashId(StashId stashId) {
+        this.stashId = stashId;
+    }
 
     public ProductsEntity getProdId() {
         return stashId.prodId;
@@ -112,8 +120,8 @@ public class StashEntity {
 
     @Override
     public String toString() {
-//        return "prod_id: " + getProdId() + ",\t user_id: " + getUserId() + ",\t status: "+ getStatus()+"\t amount: " + getAmount() +"\n";
-        return "12";
+        return "prod_id: " + getProdId() + ",\t user_id: " + getUserId() + ",\t status: "+ getStatus()+"\t amount: " + getAmount() +"\n";
+//        return "12";
     }
 
 };

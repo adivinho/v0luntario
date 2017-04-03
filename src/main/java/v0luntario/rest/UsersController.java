@@ -76,6 +76,22 @@ public class UsersController {
             return rep;
     }
 
+    @RequestMapping(path="/users/edit",  method= {RequestMethod.POST}, produces = MediaType.APPLICATION_JSON_UTF8_VALUE, consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public UserListReply editUser(@RequestBody AddUserRequest req) throws EOFException {
+        logger.info("=> /users/edit request has come");
+        UserListReply rep = new UserListReply();
+        try{
+            UsersEntity ue = userService.updateUser(userMapper.toInternal(req.user));
+            rep.users.add(userMapper.fromInternal(ue));
+        }
+        catch(Exception e){
+            rep.retcode = -1;
+            rep.error_message = e.getMessage();
+            logger.error("=> Error editing an user. Exception: "+e.getMessage());
+        }
+        return rep;
+    }
+
     @RequestMapping("/hello")
     String home() {
         logger.info("=> /hello request has come");

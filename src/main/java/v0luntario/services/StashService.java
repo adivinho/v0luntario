@@ -20,4 +20,9 @@ public class StashService {
     public List<StashEntity> getAllStash(){
         return  stashRepository.findAll();
     }
+
+    public StashEntity getStashByUserId(String id) {
+        StashEntity s = stashRepository.findOne(id);
+        return s;
+    }
 }

@@ -63,15 +63,31 @@ public class GroupsController {
     public GroupListReply addGroup(@RequestBody AddGroupRequest req) throws Exception {
         logger.info("=> /groups/add request has come "+req);
         GroupListReply rep = new GroupListReply();
-//        try{
+        try{
             GroupsEntity ge = groupService.addGroup(groupMapper.toInternal(req.group));
             rep.groups.add(groupMapper.fromInternal(ge));
-//        }
-//        catch(Exception e){
-//            rep.retcode = -1;
-//            rep.error_message = e.getMessage();
-//            logger.error("=> Error adding a group. Exception: "+e.getMessage());
-//        }
+        }
+        catch(Exception e){
+            rep.retcode = -1;
+            rep.error_message = e.getMessage();
+            logger.error("=> Error adding a group. Exception: "+e.getMessage());
+        }
+        return rep;
+    }
+
+    @RequestMapping(path="/groups/edit",  method= {RequestMethod.POST}, produces = MediaType.APPLICATION_JSON_UTF8_VALUE, consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public GroupListReply editGroup(@RequestBody AddGroupRequest req) throws Exception {
+        logger.info("=> /groups/edit request has come "+req);
+        GroupListReply rep = new GroupListReply();
+        try{
+            GroupsEntity ge = groupService.updateGroup(groupMapper.toInternal(req.group));
+            rep.groups.add(groupMapper.fromInternal(ge));
+        }
+        catch(Exception e){
+            rep.retcode = -1;
+            rep.error_message = e.getMessage();
+            logger.error("=> Error editing the group. Exception: "+e.getMessage());
+        }
         return rep;
     }
 

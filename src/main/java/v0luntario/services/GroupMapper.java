@@ -50,38 +50,44 @@ public class GroupMapper {
 
     public GroupsEntity toInternal(GroupReply lu) throws UnsupportedEncodingException, NoSuchAlgorithmException {
         GroupsEntity au = null;
-        if (lu != null) {
+        if (lu.group_id != null) {
             logger.info("=> Provided %s group_id ",lu.group_id);
             au = groupRepository.findOne(lu.group_id);
         }
+
         if (au == null) { //not found, create new
             logger.debug("=> Creating new group ...");
             au = newGroup(lu);
         }
-        logger.debug("=> Updating existing group ...");
-//        au.setGroupName(lu.group_name);
-//        au.setDescription(lu.description);
-        logger.debug("=> Group: " +au);
+            else {
+                logger.debug("=> Updating existing group ...");
+                au.setGroupName(lu.group_name);
+                au.setDescription(lu.description);
+                logger.debug("=> Group: " + au);
+            }
         return au;
     }
 
     private GroupsEntity newGroup(GroupReply gr) throws UnsupportedEncodingException, NoSuchAlgorithmException {
         GroupsEntity au = new GroupsEntity();
-        boolean idOK = false;
-        Long id = 0L;
-        while (!idOK) {
-            id = EntityIdGenerator.random();
-            logger.debug("=> Generated new ID:"+id);
-            idOK = !groupRepository.exists(String.valueOf(id));
+        if (gr.group_id != null) au.setGroupId(gr.group_id);
+            else {
+            boolean idOK = false;
+            Long id = 0L;
+            while (!idOK) {
+                id = EntityIdGenerator.random();
+                logger.debug("=> Generated new ID:" + id);
+                idOK = !groupRepository.exists(String.valueOf(id));
+            }
+            au.setGroupId(String.valueOf(id));
         }
-        au.setGroupId(String.valueOf(id));
         if (gr.group_name != null) au.setGroupName(gr.group_name);
             else au.setGroupName("NewGroup"+EntityIdGenerator.randomShort());
         if (gr.description != null) au.setDescription(gr.description);
             else {
-            Calendar calendar = Calendar.getInstance();
-            Timestamp dateNow = new java.sql.Timestamp(calendar.getTime().getTime());
-            au.setDescription("It's the newest group at " + dateNow);
+                Calendar calendar = Calendar.getInstance();
+                Timestamp dateNow = new java.sql.Timestamp(calendar.getTime().getTime());
+                au.setDescription("It's the newest group at " + dateNow);
             }
         return au;
     }

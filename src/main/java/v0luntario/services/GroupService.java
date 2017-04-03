@@ -41,8 +41,15 @@ public class GroupService {
     }
 
     public GroupsEntity addGroup(GroupsEntity ge) {
-        logger.info("=> Adding a group "+ge.getGroupName()+" with id "+ge.getGroupId());
+        logger.info("=> Adding group "+ge.getGroupName()+" with id "+ge.getGroupId());
         ge = groupRepository.save(ge);
         return ge;
     }
+
+    public GroupsEntity updateGroup(GroupsEntity ge) {
+        logger.info("=> Updating group "+ge.getGroupName()+" with id "+ge.getGroupId());
+        ge = groupRepository.save(ge);
+        return ge;
+    }
+
 }

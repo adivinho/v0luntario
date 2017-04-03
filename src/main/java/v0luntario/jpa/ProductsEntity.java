@@ -53,6 +53,23 @@ public class ProductsEntity implements Serializable {
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "stashId.prodId")
     private Collection<StashEntity> stashCollection;
 
+
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "added_by", referencedColumnName = "user_id")
+    private UsersEntity added_by;
+
+//    @Basic
+//    @Column(name = "added_by", nullable = true, length = 255)
+//    private String added_by;
+
+    public UsersEntity getAdded_by() {
+        return added_by;
+    }
+
+    public void setAdded_by(UsersEntity added_by) {
+        this.added_by = added_by;
+    }
+
     public String getProdId() {
         return prodId;
     }

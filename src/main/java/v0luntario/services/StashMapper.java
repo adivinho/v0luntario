@@ -18,8 +18,8 @@ public class StashMapper {
         StashReply sr = null;
         if (se != null) {
             sr = new StashReply();
-            sr.prod_id  = se.getProdId();
-            sr.user_id = se.getUserId();
+            sr.prod_id  = se.getProdId().toString();
+            sr.user_id = se.getUserId().toString();
             sr.amount = se.getAmount();
             sr.required_amount = se.getRequiredAmount();
             sr.status = se.getStatus().toString();

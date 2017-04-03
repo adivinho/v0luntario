@@ -91,4 +91,9 @@ public class PremisesEntity {
         result = 31 * result + Arrays.hashCode(attachment3);
         return result;
     }
+
+    @Override
+    public String toString() {
+        return "id: " + getPremiseId() + ",\t description: " + getDescription();
+    }
 }

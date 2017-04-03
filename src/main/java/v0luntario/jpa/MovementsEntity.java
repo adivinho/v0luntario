@@ -18,13 +18,34 @@ public class MovementsEntity {
     @JoinColumn(name = "prod_id", referencedColumnName = "prod_id")
     private ProductsEntity prodId;
 
+    public ProductsEntity getProdId() {
+        return prodId;
+    }
+    public void setProdId(ProductsEntity prodId) {
+        this.prodId = prodId;
+    }
+
     @ManyToOne(optional = false)
     @JoinColumn(name = "user_id", referencedColumnName = "user_id")
     private UsersEntity userId;
 
+    public UsersEntity getUserId() {
+        return userId;
+    }
+    public void setUserId(UsersEntity userId) {
+        this.userId = userId;
+    }
+
     @ManyToOne(optional = false)
     @JoinColumn(name = "premise_id", referencedColumnName = "premise_id")
     private PremisesEntity premiseId;
+
+    public PremisesEntity getPremiseId() {
+        return premiseId;
+    }
+    public void setPremiseId(PremisesEntity premiseId) {
+        this.premiseId = premiseId;
+    }
 
     @Basic
     @Column(name = "amount", nullable = true, precision = 2)

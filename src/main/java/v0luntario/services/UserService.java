@@ -44,13 +44,13 @@ public class UserService {
     }
 
     public UsersEntity addUser(UsersEntity ue) {
-        logger.info("=> Adding an user %s with id %s", ue.getUsername(), ue.getUserId());
+        logger.info("=> Adding user %s with id %s", ue.getUsername(), ue.getUserId());
         ue = userRepository.save(ue);
         return ue;
     }
 
     public UsersEntity updateUser(UsersEntity ue) {
-        logger.info("=> Updating an user %s with id %s", ue.getUsername(), ue.getUserId());
+        logger.info("=> Updating user %s with id %s", ue.getUsername(), ue.getUserId());
         ue = userRepository.save(ue);
         return ue;
     }
@@ -59,7 +59,7 @@ public class UserService {
         UsersEntity u = userRepository.findOne(id);
         if (u != null) {
             logger.debug("=> Deleting users %s with id %s", u.getUsername(), u.getUserId());
-    //   Records in user_group table are dropped by Cascade
+    //   => Records in user_group table are dropped by Cascade <=
     //        List<GroupsEntity> gl = u.getGroupsList();
     //        gl.clear();
             detailsRepository.delete(id);

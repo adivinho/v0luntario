@@ -9,7 +9,7 @@ import java.util.List;
 /**
  * Created by silvo on 3/26/17.
  */
-public interface StashRepository extends CrudRepository<StashEntity, Long> {
+public interface StashRepository extends CrudRepository<StashEntity, String> {
     @Override
     public List<StashEntity> findAll();
 }

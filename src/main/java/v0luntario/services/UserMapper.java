@@ -27,31 +27,42 @@ public class UserMapper {
     UserRepository userRepository;
 
 
-    private UsersEntity newUser() throws UnsupportedEncodingException, NoSuchAlgorithmException {
-        String createdBy = "2000";
+    private UsersEntity newUser(UserReply ur) throws UnsupportedEncodingException, NoSuchAlgorithmException {
         UsersEntity au = new UsersEntity();
         UserdetailsEntity ud = new UserdetailsEntity();
-        boolean idOK = false;
-        Long id = 0L;
-        while (!idOK) {
-            id = EntityIdGenerator.random();
-            logger.debug("Generated new ID:"+id);
-            idOK = !userRepository.exists(String.valueOf(id));
+        String createdBy = "2000"; //TODO set the correct value after authorization
+        if (ur.user_id != null) au.setUserId(ur.user_id);
+        else {
+            boolean idOK = false;
+            Long id = 0L;
+            while (!idOK) {
+                id = EntityIdGenerator.random();
+                logger.debug("=> Generated new ID:" + id);
+                idOK = !userRepository.exists(String.valueOf(id));
+            }
+            au.setUserId(String.valueOf(id));
         }
-        au.setUserId(String.valueOf(id));
-        au.setPasswordHash("*");
         au.setCreatedBy(createdBy);
-        au.setEmail("ttt"+EntityIdGenerator.randomShort()+"@test.com");
-        au.setRole(UsersEntity.Roles.User);
-        au.setPasswordHash(EntityIdGenerator.makeSHA1Hash("SuperStrongPassword"));
+        au.setUsername(ur.login != null?ur.login:"login"+EntityIdGenerator.randomShort());
+        au.setEmail(ur.email != null?ur.email:"fakeemail"+EntityIdGenerator.randomShort()+"@fake.com");
+        au.setRole(ur.role != null?Enum.valueOf(UsersEntity.Roles.class, ur.role):UsersEntity.Roles.User);
+        au.setPasswordHash(ur.password != null?EntityIdGenerator.makeSHA1Hash(ur.password):EntityIdGenerator.makeSHA1Hash("SuperStrongPassword"));
 
-        ud.setUserId(String.valueOf(id));
-        ud.setFirstName("Silvio");
-        ud.setLastName("Rodrigues");
-        ud.setNotes("none");
+        ud.setUserId(ur.user_id);
+        ud.setFirstName(ur.firstName != null?ur.firstName:"Silvio");
+        ud.setLastName(ur.lastName != null?ur.lastName:"Rodrigues");
+        ud.setMidInit(ur.midInit);
+        ud.setSex(ur.sex);
+        ud.setCountry(ur.country);
+        ud.setCity(ur.city);
+        ud.setAddress(ur.address);
+        ud.setMobile(ur.mobile);
+        ud.setMobile2(ur.mobile2);
+        ud.setNotes(ur.notes);
         Calendar calendar = Calendar.getInstance();
         Timestamp dateNow = new java.sql.Timestamp(calendar.getTime().getTime());
         ud.setActivationDate(dateNow);
+
         au.setUserdetails(ud);
         return au;
     }
@@ -68,9 +79,19 @@ public class UserMapper {
             lu.user_id = u.getUserId();
             lu.email = u.getEmail();
             lu.role = u.getRole().toString();
+            lu.createdBy = u.getCreatedBy();
             if (ude != null) {
                 lu.firstName = u.getUserdetails().getFirstName();
                 lu.lastName = u.getUserdetails().getLastName();
+                lu.country = u.getUserdetails().getCountry();
+                lu.city = u.getUserdetails().getCity();
+                lu.address = u.getUserdetails().getAddress();
+                lu.phone = u.getUserdetails().getPhone();
+                lu.midInit = u.getUserdetails().getMidInit();
+                lu.sex = u.getUserdetails().getSex();
+                lu.mobile = u.getUserdetails().getMobile();
+                lu.notes = u.getUserdetails().getNotes();
+                lu.activationDate = u.getUserdetails().getActivationDate().toString();
             }
             if (i > 0){
                 for (GroupsEntity ge : u.getGroupsList()){
@@ -83,25 +104,27 @@ public class UserMapper {
 
     public UsersEntity toInternal(UserReply lu) throws UnsupportedEncodingException, NoSuchAlgorithmException {
         UsersEntity au = null;
-        //first, check if it exists
-        if (lu != null) {
+        //check if it exists
+        if (lu.user_id != null) {
             logger.info("=> Provided %s user_id ",lu.user_id);
             au = userRepository.findOne(lu.user_id);
         }
         if (au == null) { //not found, create new
             logger.debug("=> Creating new user ...");
-            au = newUser();
+            au = newUser(lu);
         }
-        logger.debug("=> Updating existing user ...");
-        au.setUsername(lu.login);
-        au.getUserdetails().setFirstName(lu.firstName);
-        au.getUserdetails().setLastName(lu.lastName);
-        au.setEmail(lu.email);
+        else {
+            logger.debug("=> Updating existing user ...");
+            au.setUsername(lu.login);
+            au.getUserdetails().setFirstName(lu.firstName);
+            au.getUserdetails().setLastName(lu.lastName);
+            au.setEmail(lu.email);
 //        if (lu.isLibrarian) {
 //            Ugroup g = groupRepository.findOne(LIBRARIANS_GROUP_ID);
 //            g.getAppuserList().add(au);
 //            au.getUgroupList().add(g);
 //        }
+        }
         return au;
     }
 }

@@ -16,9 +16,11 @@ import java.sql.Timestamp;
 @XmlRootElement
 public class StashReply {
     @XmlElement(required=false)
-    public ProductsEntity prod_id;
-    @XmlElement(required=true)
-    public UsersEntity user_id;
+    public String prod_id;
+    @XmlElement(required=false)
+    public String user_id;
+    @XmlElement(required = false)
+    public String stash_id;
     @XmlElement(required=true)
     public BigDecimal amount;
     @XmlElement(required=true)
