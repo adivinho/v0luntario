@@ -5,10 +5,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.http.MediaType;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import v0luntario.api.AddStashRequest;
 import v0luntario.api.StashListReply;
 import v0luntario.api.UserListReply;
 import v0luntario.jpa.StashEntity;
@@ -17,6 +15,8 @@ import v0luntario.services.StashMapper;
 import v0luntario.services.StashService;
 import v0luntario.services.UserMapper;
 import v0luntario.services.UserService;
+
+import java.io.EOFException;
 
 /**
  * Created by silvo on 3/26/17.
@@ -49,6 +49,22 @@ public class StashController {
         return reply;
     }
 
+    @RequestMapping(path="/stash/add",  method= {RequestMethod.POST}, produces = MediaType.APPLICATION_JSON_UTF8_VALUE, consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public StashListReply addClass(@RequestBody AddStashRequest req) throws EOFException {
+        logger.info("=> /stash/add request has come");
+        StashListReply rep = new StashListReply();
+        try{
+            StashEntity ue = stashService.addStash(stashMapper.toInternal(req.stash));
+            rep.stash.add(stashMapper.fromInternal(ue));
+        }
+        catch(Exception e){
+            rep.retcode = -1;
+            rep.error_message = e.getMessage();
+            logger.error("=> Error adding a stash. Exception: "+e.getMessage());
+        }
+        return rep;
+    }
+    
     @RequestMapping("/stash")
     String home() {
         return "Hello from Stash!\n";

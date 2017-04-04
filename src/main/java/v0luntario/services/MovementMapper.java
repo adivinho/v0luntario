@@ -6,10 +6,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import v0luntario.api.MovementReply;
 import v0luntario.jpa.MovementsEntity;
+import v0luntario.jpa.PremisesEntity;
 import v0luntario.jpa.ProductsEntity;
 import v0luntario.jpa.UsersEntity;
 import v0luntario.repository.MovementRepository;
-import v0luntario.repository.ProductRepository;
 import v0luntario.utils.EntityIdGenerator;
 
 import java.io.UnsupportedEncodingException;
@@ -30,6 +30,12 @@ public class MovementMapper {
     private static final Logger logger =  LoggerFactory.getLogger(MovementMapper.class);
     @Autowired
     MovementRepository movementRepository;
+    @Autowired
+    ProductService productService;
+    @Autowired
+    UserService userService;
+    @Autowired
+    PremiseService premiseService;
 
     public MovementReply fromInternal(MovementsEntity ue) {
         MovementReply ur = null;
@@ -76,8 +82,6 @@ public class MovementMapper {
 
     private MovementsEntity newMovement(MovementReply ur) throws UnsupportedEncodingException, NoSuchAlgorithmException {
         MovementsEntity ue = new MovementsEntity();
-//        ProductService productService = new ProductService();
-//        UserService userService = new UserService();
 
         if (ur.move_id != null) ue.setMoveId(ur.move_id);
         else {
@@ -102,15 +106,20 @@ public class MovementMapper {
             ue.setMotionDate(dateNow);
         }
 
-//        if(ur.prod_id != null) {
-//            ProductsEntity pe = productService.getProductById(ur.prod_id);
-//            ue.setProdId(pe);
-//        }
+        if(ur.prod_id != null) {
+            ProductsEntity pe = productService.getProductById(ur.prod_id);
+            ue.setProdId(pe);
+        }
 
-//        if(ur.user_id != null) {
-//            UsersEntity usere = userService.getUserById(ur.user_id);
-//            ue.setUserId(usere);
-//        }
+        if(ur.user_id != null) {
+            UsersEntity usere = userService.getUserById(ur.user_id);
+            ue.setUserId(usere);
+        }
+
+        if(ur.premise_id != null) {
+            PremisesEntity pe = premiseService.getPremiseById(ur.premise_id);
+            ue.setPremiseId(pe);
+        }
 
         return ue;
     }

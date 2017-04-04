@@ -22,11 +22,11 @@ public class StashReply {
     @XmlElement(required = false)
     public String stash_id;
     @XmlElement(required=true)
-    public BigDecimal amount;
+    public String amount;
     @XmlElement(required=true)
-    public BigDecimal required_amount;
+    public String required_amount;
     @XmlElement(required=true)
     public String status;
     @XmlElement(required=true)
-    public Timestamp deadline;
+    public String deadline;
 }
