@@ -1,0 +1,72 @@
+----
+
+curl -d '{"group":{"group_id":"12345","group_name":"ThroughCurl","description":"day"}}' -X POST -H 'Content-Type: application/json' localhost:8090/groups/add
+
+curl localhost:8090/groups/del/12345
+
+----
+
+curl -d '{"user":{"user_id":"4044","login":"curluser2","firstName":"Cvan","lastName":"Glass","email":"user1@nnm.ru","role":"User","groups":null}}' -X POST -H 'Content-Type: application/json' localhost:8090/users/add
+
+curl localhost:8090/users/del/4044
+
+----
+
+curl -d '{"product":{"product_id":"4044","name":"Product name","description":"Product by curl request","added_by":"2000","class_id":"1003","unit_id":"1002"}}' -X POST -H 'Content-Type: application/json' localhost:8090/product/add
+
+curl localhost:8090/product/del/3000
+
+----
+
+curl localhost:8090/unit/all
+{"retcode":0,"apiVer":"0.0.1","error_message":null,"units":[{"unit_id":"1000","name":"kg"},{"unit_id":"1001","name":"pc"},{"unit_id":"1002","name":"hrn"}]}
+
+curl localhost:8090/unit/byid/1000
+{"retcode":0,"apiVer":"0.0.1","error_message":null,"units":[{"unit_id":"1000","name":"kg"}]}
+
+curl -d '{"unit":{"unit_id":"12345","name":"ff"}}' -X POST -H 'Content-Type: application/json' localhost:8090/unit/add
+{"retcode":0,"apiVer":"0.0.1","error_message":null,"units":[{"unit_id":"12345","name":"ff"}]}
+
+curl -d '{"unit":{"unit_id":null,"name":"dd"}}' -X POST -H 'Content-Type: application/json' localhost:8090/unit/add
+{"retcode":0,"apiVer":"0.0.1","error_message":null,"units":[{"unit_id":"6339375070919154396","name":"dd"}]}
+
+curl localhost:8090/unit/del/12345
+
+curl localhost:8090/unit/del/6339375070919154396
+{"retcode":0,"apiVer":"0.0.1","error_message":null}
+
+----
+
+curl localhost:8090/premise/all
+{"retcode":0,"apiVer":"0.0.1","error_message":null,"premises":[{"premise_id":"100","description":"Share cash  Ivan Glass-> Ivan Halfglass"},{"premise_id":"101","description":"Collected spare hats in one hands"},{"premise_id":"102","description":"Pass overcoats to ATO"}]}
+
+curl localhost:8090/premise/byid/100
+{"retcode":0,"apiVer":"0.0.1","error_message":null,"premises":[{"premise_id":"100","description":"Share cash  Ivan Glass-> Ivan Halfglass"}]}
+
+curl -d '{"premise":{"premise_id":null,"description":"dd"}}' -X POST -H 'Content-Type: application/json' localhost:8090/premise/add
+{"retcode":0,"apiVer":"0.0.1","error_message":null,"premises":[{"premise_id":"6984080877443740550","description":"dd"}]}
+
+curl -d '{"premise":{"premise_id":"6984080877443740550","description":"dd2"}}' -X POST -H 'Content-Type: application/json' localhost:8090/premise/add
+{"retcode":0,"apiVer":"0.0.1","error_message":null,"premises":[{"premise_id":"6984080877443740550","description":"dd2"}]}
+
+curl localhost:8090/premise/del/6984080877443740550
+
+----
+
+curl localhost:8090/movement/all
+
+curl localhost:8090/movement/byid/100
+{"retcode":0,"apiVer":"0.0.1","error_message":null,"movements":[{"move_id":"100","prod_id":"id: 102,\t name: Cash,\t description: Cash for paltry things\n","user_id":"id: 3000,\t usernamename: user1,\t email: user1@nnm.ru,\t activation: 2017-01-01 00:00:00.0\n","premise_id":"id: 100,\t description: Share cash  Ivan Glass-> Ivan Halfglass","amount":"-1000.50","motion_date":"2017-01-01 20:00:00.0"}]}
+
+curl -d '{"movement":{"prod_id":"102","user_id":"3000","premise_id":"100","amount":"100.30","motion_date":"2017-04-01 00:00:10"}}' -X POST -H 'Content-Type: application/json' localhost:8090/movement/add
+
+curl -d '{"movement":{"prod_id":"102","user_id":"3000","premise_id":"100","amount":"100.30","motion_date":"2017-04-01 00:00:10"}}' -X POST -H 'Content-Type: application/json' localhost:8090/movement/add
+{"retcode":0,"apiVer":"0.0.1","error_message":null,"movements":[{"move_id":"8687747862188244600","prod_id":"id: 102,\t name: Cash,\t description: Cash for paltry things\n","user_id":"id: 3000,\t usernamename: user1,\t email: user1@nnm.ru,\t activation: 2017-01-01 00:00:00.0\n","premise_id":"id: 100,\t description: Share cash  Ivan Glass-> Ivan Halfglass","amount":"100.30","motion_date":"2017-04-01 00:00:10.0"}]}
+
+curl localhost:8090/movement/del/8687747862188244600
+{"retcode":0,"apiVer":"0.0.1","error_message":null}
+
+----
+
+curl localhost:8090/stash/all
+{"retcode":0,"apiVer":"0.0.1","error_message":null,"stash":[{"prod_id":"id: 100,\t name: Overcoat,\t description: overcoat for winter time\n","user_id":"id: 3000,\t usernamename: user1,\t email: user1@nnm.ru,\t activation: 2017-01-01 00:00:00.0\n","stash_id":null,"amount":"10.00","required_amount":"100.00","status":"Active","deadline":"2017-12-01 00:00:00.0"},{"prod_id":"id: 100,\t name: Overcoat,\t description: overcoat for winter time\n","user_id":"id: 3001,\t usernamename: user2,\t email: user2@nnm.ru,\t activation: 2017-01-01 00:00:00.0\n","stash_id":null,"amount":"0.00","required_amount":"50.00","status":"Active","deadline":"2017-11-20 00:00:00.0"},{"prod_id":"id: 101,\t name: Hat,\t description: Hat with with ear flaps\n","user_id":"id: 3000,\t usernamename: user1,\t email: user1@nnm.ru,\t activation: 2017-01-01 00:00:00.0\n","stash_id":null,"amount":"50.00","required_amount":"50.00","status":"Closed","deadline":"2017-03-10 00:00:00.0"},{"prod_id":"id: 102,\t name: Cash,\t description: Cash for paltry things\n","user_id":"id: 3001,\t usernamename: user2,\t email: user2@nnm.ru,\t activation: 2017-01-01 00:00:00.0\n","stash_id":null,"amount":"100.50","required_amount":"2000.00","status":"Active","deadline":"2017-10-10 00:00:00.0"},{"prod_id":"id: 102,\t name: Cash,\t description: Cash for paltry things\n","user_id":"id: 3002,\t usernamename: user3,\t email: user3@nnm.ru,\t activation: 2017-01-01 00:00:00.0\n","stash_id":null,"amount":"1000.50","required_amount":"2000.00","status":"Suspended","deadline":"2017-05-10 00:00:00.0"}]}
